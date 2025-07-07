@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Digital active
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_SERVER:localhost:5432/Sweets}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:jasur1803}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+
+
+springdoc:
+  swagger-ui:
+    path:/swagger-ui.html
