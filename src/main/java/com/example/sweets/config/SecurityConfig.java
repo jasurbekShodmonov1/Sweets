@@ -55,7 +55,8 @@ public class SecurityConfig {
             "/swagger-ui.html"
     };
     private static final String[] COMMON_URLS = {
-
+            "/api/users/v1/**",
+            "api/roles/v1/**"
     };
     private static final String[] ADMIN_URLS = {
 

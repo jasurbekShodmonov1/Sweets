@@ -3,7 +3,7 @@ package com.example.sweets.controller.user;
 
 import com.example.sweets.dto.request.user.UserRequestDto;
 import com.example.sweets.dto.response.user.UserResponseDto;
-import com.example.sweets.service.UserService;
+import com.example.sweets.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

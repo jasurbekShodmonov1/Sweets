@@ -1,5 +1,6 @@
 package com.example.sweets.dto.response.user;
 
+import com.example.sweets.dto.response.product.ProductResponseDto;
 import com.example.sweets.entity.user.Role;
 
 import java.util.List;
@@ -11,5 +12,6 @@ public record UserResponseDto (
         String fullName,
         String email,
         String phoneNumber,
-        List<RoleResponseDto> roles
+        List<RoleResponseDto> roles,
+        List<ProductResponseDto> products
 ){}

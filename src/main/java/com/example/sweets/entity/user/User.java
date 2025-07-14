@@ -1,6 +1,7 @@
 package com.example.sweets.entity.user;
 
 import com.example.sweets.entity.base.BaseDomain;
+import com.example.sweets.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +39,10 @@ public class User extends BaseDomain<UUID> implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false))
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Product> products;
+
 
     @CreationTimestamp
     private LocalDateTime createdAt;

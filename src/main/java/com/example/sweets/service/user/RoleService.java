@@ -1,4 +1,4 @@
-package com.example.sweets.service;
+package com.example.sweets.service.user;
 
 import com.example.sweets.dto.request.user.RoleRequestDto;
 import com.example.sweets.dto.response.user.RoleResponseDto;

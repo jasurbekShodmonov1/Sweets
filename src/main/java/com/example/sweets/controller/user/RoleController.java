@@ -3,8 +3,7 @@ package com.example.sweets.controller.user;
 
 import com.example.sweets.dto.request.user.RoleRequestDto;
 import com.example.sweets.dto.response.user.RoleResponseDto;
-import com.example.sweets.service.RoleService;
-import lombok.Getter;
+import com.example.sweets.service.user.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

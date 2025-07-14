@@ -1,11 +1,13 @@
-package com.example.sweets.service;
+package com.example.sweets.service.user;
 
 
 import com.example.sweets.dto.request.user.UserRequestDto;
 import com.example.sweets.dto.response.user.UserResponseDto;
+import com.example.sweets.entity.product.Product;
 import com.example.sweets.entity.user.Role;
 import com.example.sweets.entity.user.User;
 import com.example.sweets.mapper.UserMapper;
+import com.example.sweets.repository.ProductRepository;
 import com.example.sweets.repository.RoleRepository;
 import com.example.sweets.repository.UserRepository;
 //import com.example.sweets.util.RoleMapperHelper;
@@ -24,8 +26,9 @@ public class UserService {
     private final UserMapper userMapper;
 
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
 
+    private final ProductRepository productRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserResponseDto> getActiveAll(){
         List<User>  users = userRepository.findAllByEnabledTrue();
@@ -55,6 +58,7 @@ public class UserService {
 
         List<Role> roles = roleRepository.findAllById(userRequestDto.roleIds());
         user.setRoles(roles);
+//        List<Product> product = productRepository.findAllById(.)
         User saved = userRepository.save(user);
 
         return userMapper.toDto(saved);
