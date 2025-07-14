@@ -24,7 +24,7 @@ public class RoleService {
     }
 
     public RoleResponseDto get(UUID id){
-        Role role = roleRepository.findById(id).orElseThrow(()-> new RuntimeException("role type not found"));
+        Role role = roleRepository.findById(id).orElseThrow(()-> new RuntimeException("role  not found"));
 
         return  roleMapper.toDto(role);
     }

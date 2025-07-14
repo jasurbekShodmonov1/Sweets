@@ -9,12 +9,16 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RoleMapper {
 
     Role toEntity(RoleRequestDto roleRequestDto);
 
     RoleResponseDto toDto(Role role);
+
+    List<RoleResponseDto> toDtoList(List<Role> roles);
 
     @Mapping(target = "id", ignore = true)
     void updateFromDto(RoleRequestDto roleRequestDto, @MappingTarget Role role);

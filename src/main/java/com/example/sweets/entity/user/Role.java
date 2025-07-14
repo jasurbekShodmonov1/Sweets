@@ -9,9 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -25,6 +23,8 @@ public class Role extends BaseDomain<UUID> {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @ManyToMany(mappedBy = "roles")
+    private List<User> userList = new ArrayList<>();
 
     public String getAuthority() {
         return name.toUpperCase();

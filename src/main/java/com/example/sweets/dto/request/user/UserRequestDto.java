@@ -1,15 +1,15 @@
-package com.example.sweets.dto.response.user;
+package com.example.sweets.dto.request.user;
 
 import com.example.sweets.entity.user.Role;
 
 import java.util.List;
 import java.util.UUID;
 
-public record UserResponseDto (
-        UUID id,
+public record UserRequestDto(
         String username,
         String fullName,
         String email,
         String phoneNumber,
-        List<RoleResponseDto> roles
+        String password,
+        List<UUID> roleIds
 ){}
