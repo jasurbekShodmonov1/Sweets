@@ -17,12 +17,12 @@ public class SwaggerConfig {
   @Bean
   public OpenAPI customOpenAPI() {
     return new OpenAPI()
-        .info(new Info().title("Digital Assets Service"))
-        .addSecurityItem(new SecurityRequirement().addList("DigitalAssetSecurityScheme"))
+        .info(new Info().title("Sweets"))
+        .addSecurityItem(new SecurityRequirement().addList("SweetsScheme"))
         .components(
             new Components()
                 .addSecuritySchemes(
-                    "DigitalAssetSecurityScheme",
+                    "SweetsScheme",
                     new SecurityScheme()
                         .bearerFormat("JWT")
                         .name("bearerAuth")

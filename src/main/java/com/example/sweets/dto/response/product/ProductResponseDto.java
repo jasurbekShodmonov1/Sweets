@@ -5,13 +5,4 @@ import com.example.sweets.entity.user.User;
 import java.util.UUID;
 
 public record ProductResponseDto(
-        UUID id,
-        String name,
-        String photoUrl,
-        Long price,
-        int count,
-        User user
-) {
-
-
-}
+    UUID id, String name, String photoUrl, Long price, Integer count,  String createdBy) {}

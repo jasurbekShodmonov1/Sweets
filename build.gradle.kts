@@ -44,6 +44,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${rootProject.extra.get("openApiVersion")}")
 	implementation("org.mapstruct:mapstruct:${rootProject.extra.get("mapstructVersion")}")
+	implementation("io.minio:minio:8.5.17")
 	implementation ("org.immutables:builder:2.10.0")
 	annotationProcessor ("org.immutables:builder:2.10.0")
 	annotationProcessor("org.mapstruct:mapstruct-processor:${rootProject.extra.get("mapstructVersion")}")

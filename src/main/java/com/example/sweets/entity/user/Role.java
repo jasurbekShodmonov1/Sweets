@@ -4,30 +4,28 @@ import com.example.sweets.entity.base.BaseDomain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import java.time.LocalDateTime;
+import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
-import java.util.*;
 
 @Entity
 @Getter
 @Setter
 public class Role extends BaseDomain<UUID> {
 
-    @Column(unique = true)
-    private String name;
-    private String description;
+  @Column(unique = true)
+  private String name;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  private String description;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<User> userList = new ArrayList<>();
+  @CreationTimestamp private LocalDateTime createdAt;
 
-    public String getAuthority() {
-        return name.toUpperCase();
-    }
+  @ManyToMany(mappedBy = "roles")
+  private List<User> userList = new ArrayList<>();
 
+  public String getAuthority() {
+    return name.toUpperCase();
+  }
 }

@@ -7,27 +7,24 @@ import com.example.sweets.entity.user.Role;
 import com.example.sweets.exception.ForbiddenException;
 import com.example.sweets.exception.UnauthorizedException;
 import com.example.sweets.repository.UserRepository;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Log4j2
 @Service

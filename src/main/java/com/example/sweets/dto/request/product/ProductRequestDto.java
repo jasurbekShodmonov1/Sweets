@@ -1,13 +1,10 @@
 package com.example.sweets.dto.request.product;
 
-import java.util.UUID;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
-public record ProductRequestDto (
-    UUID ID,
+public record ProductRequestDto(
     String name,
-    String photoUrl,
-    Long price,
-    int count,
-    String description
-){
-}
+    @NotNull(message = "Photo is required") MultipartFile photo,
+    Long price,Integer count,
+    String description) {}
