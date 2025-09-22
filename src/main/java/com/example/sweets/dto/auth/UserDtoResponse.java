@@ -1,11 +1,10 @@
 package com.example.sweets.dto.auth;
 
 import com.example.sweets.exception.UnauthorizedException;
-import lombok.Builder;
-import org.springframework.lang.Nullable;
-
 import java.util.Set;
 import java.util.UUID;
+import lombok.Builder;
+import org.springframework.lang.Nullable;
 
 @Builder
 public record UserDtoResponse(

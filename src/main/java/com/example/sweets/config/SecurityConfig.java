@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import java.util.List;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,112 +31,109 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(ApplicationProperties.class)
-
 public class SecurityConfig {
 
-    private final AuthenticationExceptionEntryPoint authenticationExceptionEntryPoint;
-    private final ApplicationProperties applicationProperties;
-    private static final String[] PUBLIC_URLS = {
-            "/api/auth/v1/login",
+  private final AuthenticationExceptionEntryPoint authenticationExceptionEntryPoint;
+  private final ApplicationProperties applicationProperties;
+  private static final String[] PUBLIC_URLS = {
+    "/api/auth/v1/login",
+    "/v2/api-docs",
+    "/v3/api-docs",
+    "/v3/api-docs/**",
+    "/swagger-resources",
+    "/swagger-resources/**",
+    "/configuration/ui",
+    "/configuration/security",
+    "/swagger-ui/**",
+    "/webjars/**",
+    "/swagger-ui.html"
+  };
+  private static final String[] COMMON_URLS = {"/api/users/v1/**", "api/roles/v1/**"};
+  private static final String[] ADMIN_URLS = {};
 
-            "/v2/api-docs",
-            "/v3/api-docs",
-            "/v3/api-docs/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui/**",
-            "/webjars/**",
-            "/swagger-ui.html"
-    };
-    private static final String[] COMMON_URLS = {
+  private static final String[] MANAGER_URLS = {};
 
-    };
-    private static final String[] ADMIN_URLS = {
+  public SecurityConfig(
+      AuthenticationExceptionEntryPoint authenticationEntryPoint,
+      ApplicationProperties applicationProperties) {
+    this.authenticationExceptionEntryPoint = authenticationEntryPoint;
+    this.applicationProperties = applicationProperties;
+  }
 
-    };
-    private static final String[] MANAGER_URLS = {};
+  @Bean
+  SecurityFilterChain jwtSecurityFilterChain(
+      HttpSecurity http,
+      JwtAuthenticationFilter jwtAuthenticationFilter,
+      AuthenticationExceptionEntryPoint authenticationExceptionEntryPoint)
+      throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(PUBLIC_URLS)
+                    .permitAll()
+                    .requestMatchers(COMMON_URLS)
+                    .hasAnyAuthority("ADMIN", "USER")
+                    .requestMatchers(ADMIN_URLS)
+                    .hasAnyAuthority("ADMIN")
+                    .anyRequest()
+                    .authenticated())
+        .exceptionHandling(
+            (ex) ->
+                ex.authenticationEntryPoint(authenticationExceptionEntryPoint)
+                    .accessDeniedHandler(accessDeniedHandler()))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .anonymous(AbstractHttpConfigurer::disable); // Use JWT Auth
 
-    public SecurityConfig(
-            AuthenticationExceptionEntryPoint authenticationEntryPoint,
-            ApplicationProperties applicationProperties) {
-        this.authenticationExceptionEntryPoint = authenticationEntryPoint;
-        this.applicationProperties = applicationProperties;
-    }
+    return http.build();
+  }
 
-    @Bean
-    SecurityFilterChain jwtSecurityFilterChain(
-            HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationExceptionEntryPoint authenticationExceptionEntryPoint)
-            throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_URLS).permitAll()
-                        .requestMatchers(COMMON_URLS).hasAnyAuthority("ADMIN","USER")
-                        .requestMatchers(ADMIN_URLS).hasAnyAuthority("ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .exceptionHandling(
-                        (ex) ->
-                                ex.authenticationEntryPoint(authenticationExceptionEntryPoint)
-                                        .accessDeniedHandler(accessDeniedHandler()))
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .anonymous(AbstractHttpConfigurer::disable); // Use JWT Auth
+  @Bean
+  public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+    authenticationProvider.setUserDetailsService(userDetailsService);
+    authenticationProvider.setPasswordEncoder(passwordEncoder());
+    return authenticationProvider;
+  }
 
-        return http.build();
-    }
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of("*"));
+    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  JwtDecoder jwtDecoder() {
+    return NimbusJwtDecoder.withPublicKey(applicationProperties.rca().publicKey()).build();
+  }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+  @Bean
+  JwtEncoder jwtEncoder() {
+    JWK jwk =
+        new RSAKey.Builder(applicationProperties.rca().publicKey())
+            .privateKey(applicationProperties.rca().privateKey())
+            .build();
+    JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+    return new NimbusJwtEncoder(jwks);
+  }
 
-    @Bean
-    JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(applicationProperties.rca().publicKey()).build();
-    }
-
-    @Bean
-    JwtEncoder jwtEncoder() {
-        JWK jwk =
-                new RSAKey.Builder(applicationProperties.rca().publicKey())
-                        .privateKey(applicationProperties.rca().privateKey())
-                        .build();
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new CustomAccessDeniedHandler();
-    }
+  @Bean
+  public AccessDeniedHandler accessDeniedHandler() {
+    return new CustomAccessDeniedHandler();
+  }
 }

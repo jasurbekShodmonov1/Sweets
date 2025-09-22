@@ -2,15 +2,13 @@ package com.example.sweets.entity.user;
 
 import com.example.sweets.entity.base.BaseDomain;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.time.LocalDateTime;
-import java.util.*;
-
 
 @Entity
 @Table(name = "users")
@@ -18,54 +16,55 @@ import java.util.*;
 @Setter
 public class User extends BaseDomain<UUID> implements UserDetails {
 
-    @Column(unique = true)
-    private String username;
+  @Column(unique = true)
+  private String username;
 
-    private String fullName;
+  private String fullName;
 
-    @Column(unique = true)
-    private String email;
+  @Column(unique = true)
+  private String email;
 
-    @Column(unique = true)
-    private String phoneNumber;
+  @Column(unique = true)
+  private String phoneNumber;
 
-    private String password;
+  private String password;
 
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+      name = "users_roles",
+      joinColumns = @JoinColumn(name = "user_id", nullable = false),
+      inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false))
+  private List<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false))
-    private List<Role> roles;
+  //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  //    private List<Product> products;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  @CreationTimestamp private LocalDateTime createdAt;
 
-    private Boolean enabled = Boolean.TRUE;
+  private Boolean enabled = Boolean.TRUE;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of();
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return this.enabled;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return this.enabled;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return this.enabled;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return this.enabled;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return this.enabled;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return this.enabled;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
+  @Override
+  public boolean isEnabled() {
+    return this.enabled;
+  }
 }
