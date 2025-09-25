@@ -11,7 +11,6 @@ import com.example.sweets.mapper.cart.CartMapper;
 import com.example.sweets.repository.ProductRepository;
 import com.example.sweets.repository.UserRepository;
 import com.example.sweets.repository.cart.CartRepository;
-import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

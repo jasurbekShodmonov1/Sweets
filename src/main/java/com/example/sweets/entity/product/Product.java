@@ -3,6 +3,8 @@ package com.example.sweets.entity.product;
 import com.example.sweets.entity.base.BaseDomain;
 import com.example.sweets.entity.user.User;
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +20,7 @@ public class Product extends BaseDomain<UUID> {
   @Column(length = 2048)
   private String photoUrl;
 
-  private Long price;
+  private BigDecimal price;
   private Integer count;
 
 
