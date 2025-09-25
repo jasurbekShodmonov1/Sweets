@@ -1,8 +1,19 @@
 package com.example.sweets.dto.response.product;
 
+import com.example.sweets.dto.response.review.CommentResponseDto;
+import com.example.sweets.dto.response.review.RatingResponseDto;
 import com.example.sweets.entity.user.User;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 public record ProductResponseDto(
-    UUID id, String name, String photoUrl, Long price, Integer count,  String createdBy) {}
+        UUID id,
+        String name,
+        String photoUrl,
+        BigDecimal price,
+        Integer count,
+        Double averageRating,
+        List<CommentResponseDto> comments,
+        String createdBy) {}
