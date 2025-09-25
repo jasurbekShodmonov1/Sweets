@@ -24,14 +24,14 @@ public class MinioService {
     public String uploadImage(MultipartFile multipartFile) throws Exception {
         String filename = UUID.randomUUID() + "_" + multipartFile.getOriginalFilename();
 
-        // create bucket if not exists
+
         boolean exists = minioClient.bucketExists(
                 BucketExistsArgs.builder().bucket(bucketName).build());
         if (!exists) {
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
         }
 
-        // upload file
+
         minioClient.putObject(
                 PutObjectArgs.builder()
                         .bucket(bucketName)
@@ -40,7 +40,7 @@ public class MinioService {
                         .contentType(multipartFile.getContentType())
                         .build());
 
-        // return presigned URL (1h expiry)
+
         return minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                         .method(Method.GET)

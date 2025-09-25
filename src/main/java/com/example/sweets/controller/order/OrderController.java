@@ -31,6 +31,11 @@ public class OrderController {
         return orderService.getUserOrders(username);
     }
 
+    @GetMapping("/byUsername")
+    public List<OrderResponseDto> getOrdersByUsername(@RequestParam String username){
+        List<OrderResponseDto> orders = orderService.getUserOrders(username);
+        return orders;
+    }
     @PutMapping("/{orderId}/status")
     public OrderResponseDto updateStatus(@PathVariable UUID orderId,
                                          @RequestParam OrderStatus status) {
