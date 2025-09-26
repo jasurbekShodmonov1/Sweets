@@ -76,6 +76,7 @@ public class OrderService {
         return orderMapper.toDto(order);
     }
 
+
     public List<OrderResponseDto> getUserOrders(String username){
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -84,6 +85,8 @@ public class OrderService {
                 .map(orderMapper::toDto)
                 .toList();
     }
+
+
 
     public OrderResponseDto changeStatus(UUID orderId, OrderStatus status){
         Order order = orderRepository.findById(orderId)
