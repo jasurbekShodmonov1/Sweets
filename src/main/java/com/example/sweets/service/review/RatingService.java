@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,13 +45,32 @@ public class RatingService {
         rating.setProduct(product);
         rating.setEnumRating(ratingRequestDto.enumRating());
         rating.setCreatedAt(LocalDateTime.now());
+        ratingRepository.save(rating);
 
-        Double avg = ratingRepository.findAverageRatingByProductId(product.getId());
-        product.setAverageRating(avg);
+        product.getRatings().add(rating);
+        Double avgRating = calculateAverageRating(product);
+        product.setAverageRating(avgRating);
         productRepository.save(product);
 
-        Rating saved =  ratingRepository.save(rating);
-        return ratingMapper.toDto(saved);
+        return ratingMapper.toDto(rating);
+    }
+
+    private Double calculateAverageRating(Product product){
+
+        int sum=0;
+
+        for (Rating r : product.getRatings()) {
+            switch (r.getEnumRating()) {
+                case ONE -> sum += 1;
+                case TWO -> sum += 2;
+                case THREE -> sum += 3;
+                case FOUR -> sum += 4;
+                case FIVE -> sum += 5;
+            }
+        }
+        System.out.println(sum);
+
+        return (double) sum / product.getRatings().size();
     }
 
 }

@@ -39,19 +39,21 @@ public class SecurityConfig {
   private final AuthenticationExceptionEntryPoint authenticationExceptionEntryPoint;
   private final ApplicationProperties applicationProperties;
   private static final String[] PUBLIC_URLS = {
-    "/api/auth/v1/login",
-    "/v2/api-docs",
-    "/v3/api-docs",
-    "/v3/api-docs/**",
-    "/swagger-resources",
-    "/swagger-resources/**",
-    "/configuration/ui",
-    "/configuration/security",
-    "/swagger-ui/**",
-    "/webjars/**",
-    "/swagger-ui.html"
+          "/api/auth/v1/login",
+          "/v2/api-docs",
+          "/api/users/v1/**",
+          "api/roles/v1/**",
+          "/v3/api-docs",
+          "/v3/api-docs/**",
+          "/swagger-resources",
+          "/swagger-resources/**",
+          "/configuration/ui",
+          "/configuration/security",
+          "/swagger-ui/**",
+          "/webjars/**",
+          "/swagger-ui.html"
   };
-  private static final String[] COMMON_URLS = {"/api/users/v1/**", "api/roles/v1/**"};
+  private static final String[] COMMON_URLS = {};
   private static final String[] ADMIN_URLS = {};
 
   private static final String[] MANAGER_URLS = {};

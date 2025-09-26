@@ -35,7 +35,10 @@ public class Product extends BaseDomain<UUID> {
   @JoinColumn(name = "user_id", nullable = false)
   private User currentUser;
 
-  private Double averageRating;
+  private Double averageRating = 0.0;
+
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  private List<Rating> ratings = new ArrayList<>();
 
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<Comment> comments = new ArrayList<>();
