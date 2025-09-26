@@ -17,15 +17,6 @@ public interface RatingRepository extends JpaRepository<Rating, UUID> {
 
     Optional<Rating> findByUserAndProduct(User user, Product product);
 
-    List<Rating> findByProductId(UUID productId);
 
-    @Query(value = "SELECT AVG(CASE " +
-            "WHEN r.enum_rating = 'ONE' THEN 1 " +
-            "WHEN r.enum_rating = 'TWO' THEN 2 " +
-            "WHEN r.enum_rating = 'THREE' THEN 3 " +
-            "WHEN r.enum_rating = 'FOUR' THEN 4 " +
-            "WHEN r.enum_rating = 'FIVE' THEN 5 END) " +
-            "FROM rating r WHERE r.product_id = :productId", nativeQuery = true)
-    Double findAverageRatingByProductId(@Param("productId") UUID productId);
 
 }
