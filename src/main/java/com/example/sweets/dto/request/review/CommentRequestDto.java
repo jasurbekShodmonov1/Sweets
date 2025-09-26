@@ -6,6 +6,6 @@ import java.util.UUID;
 
 public record CommentRequestDto(
         UUID productId,
-        Rating rating
+        String text
 ) {
 }

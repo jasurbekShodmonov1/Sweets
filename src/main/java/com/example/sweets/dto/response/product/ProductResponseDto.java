@@ -15,5 +15,4 @@ public record ProductResponseDto(
         BigDecimal price,
         Integer count,
         Double averageRating,
-        List<CommentResponseDto> comments,
         String createdBy) {}
