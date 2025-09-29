@@ -41,7 +41,7 @@ public class User extends BaseDomain<UUID> implements UserDetails {
 
   @CreationTimestamp private LocalDateTime createdAt;
 
-  private Boolean enabled = Boolean.TRUE;
+  private Boolean enabled = Boolean.FALSE;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -31,6 +31,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation ("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+
 	implementation("org.springframework.security:spring-security-oauth2-jose:6.4.4")
 	implementation("com.nimbusds:nimbus-jose-jwt:9.40")
 
@@ -48,6 +49,8 @@ dependencies {
 	implementation ("org.immutables:builder:2.10.0")
 	annotationProcessor ("org.immutables:builder:2.10.0")
 	annotationProcessor("org.mapstruct:mapstruct-processor:${rootProject.extra.get("mapstructVersion")}")
+
+    implementation("org.springframework.boot:spring-boot-starter-mail")
 }
 
 
