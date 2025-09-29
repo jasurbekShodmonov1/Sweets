@@ -4,6 +4,7 @@ package com.example.sweets.service.review;
 import com.example.sweets.dto.request.review.RatingRequestDto;
 import com.example.sweets.dto.response.review.RatingResponseDto;
 import com.example.sweets.entity.product.Product;
+import com.example.sweets.entity.review.EnumRating;
 import com.example.sweets.entity.review.Rating;
 import com.example.sweets.entity.user.User;
 import com.example.sweets.mapper.review.RatingMapper;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +48,29 @@ public class RatingService {
         rating.setEnumRating(ratingRequestDto.enumRating());
         rating.setCreatedAt(LocalDateTime.now());
         ratingRepository.save(rating);
+
+        product.getRatings().add(rating);
+        Double avgRating = calculateAverageRating(product);
+        product.setAverageRating(avgRating);
+        productRepository.save(product);
+
+        return ratingMapper.toDto(rating);
+    }
+
+    @Transactional
+    public RatingResponseDto updateRating(String username, UUID id, EnumRating enumRating){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(()->new RuntimeException("User not found"));
+
+        Rating rating = ratingRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("Rating not found"));
+
+        rating.setEnumRating(enumRating);
+        rating.setCreatedAt(LocalDateTime.now());
+        ratingRepository.save(rating);
+
+        Product product = productRepository.findByRatingsId(id)
+                .orElseThrow(()->new RuntimeException("Product not found"));
 
         product.getRatings().add(rating);
         Double avgRating = calculateAverageRating(product);

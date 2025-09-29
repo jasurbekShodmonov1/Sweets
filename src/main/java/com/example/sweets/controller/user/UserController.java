@@ -40,8 +40,23 @@ public class UserController {
     return ResponseEntity.ok(newUser);
   }
 
+  @PostMapping("/verify")
+  public ResponseEntity<String> verify(@RequestParam String email, @RequestParam String otp){
+      boolean valid = userService.verifyOtp(email, otp);
+      if(valid) {
+          return ResponseEntity.ok("Email verified, account activated!");
+      }
+      return ResponseEntity.badRequest().body("Invalid or expired OTP.");
+  }
+
+  @PostMapping("/resendOtp")
+  public ResponseEntity<String> resendOtp(@RequestParam String email){
+      userService.resendOtp(email);
+      return ResponseEntity.ok("New OTP has been sent to your email.");
+  }
+
   @PutMapping("/{userId}")
-  public ResponseEntity<UserResponseDto> updateuser(
+  public ResponseEntity<UserResponseDto> updateUser(
       @PathVariable("userId") UUID id, @RequestBody UserRequestDto userRequestDto) {
     UserResponseDto updatedUser = userService.updateUser(id, userRequestDto);
     return ResponseEntity.ok(updatedUser);
