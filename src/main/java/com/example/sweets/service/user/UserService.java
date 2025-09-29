@@ -49,6 +49,13 @@ public class UserService {
   public UserResponseDto createUser(UserRequestDto userRequestDto) {
 
     User user = userMapper.toEntity(userRequestDto);
+
+    String rawPassword = userRequestDto.password();
+    if (rawPassword.length() < 8
+            || !rawPassword.matches(".*[A-Z].*")
+            || !rawPassword.matches(".*[^a-zA-Z0-9].*")) {
+          throw new IllegalArgumentException("Password must be at least 8 characters, contain one uppercase letter, and one special symbol");
+    }
     user.setPassword(passwordEncoder.encode(userRequestDto.password()));
 
     List<Role> roles = roleRepository.findAllById(userRequestDto.roleIds());

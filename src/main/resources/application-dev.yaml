@@ -34,3 +34,16 @@ minio:
   access-key: ${MINIO_ACCESS_KEY:minioadmin}
   secret-key: ${MINIO_SECRET_KEY:minioadmin}
   bucket: sweets
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: jasurshodmonov21020@gmail.com
+    password: wbdl oegp oefj wafx
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
