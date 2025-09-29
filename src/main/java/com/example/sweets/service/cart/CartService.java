@@ -38,10 +38,6 @@ public class CartService {
                     return cartRepository.save(newCart);
                 });
 
-        if (!cart.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("Access denied: not your cart");
-        }
-
         return cartMapper.toDto(cart);
     }
 
@@ -56,17 +52,8 @@ public class CartService {
                     return cartRepository.save(newCart);
                 });
 
-        if (!cart.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("Access denied");
-        }
-
-
-
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-
-
-
 
 
         Optional<CartItem> existingItem = cart.getItems().stream()

@@ -42,8 +42,8 @@ public class SecurityConfig {
 
 
     private static final String[] USER_URLS = {
-            "/api/orders/v1",
-            "/api/cart/v1"
+            "/api/orders/v1/**",
+            "/api/cart/v1/**"
     };
 
 
@@ -65,9 +65,9 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_URLS).permitAll()
 
 
-                        .requestMatchers(USER_URLS).hasRole("USER")
+                        .requestMatchers(USER_URLS).hasAnyAuthority("USER","ADMIN")
 
-                        .requestMatchers(ADMIN_URLS).hasRole("ADMIN")
+                        .requestMatchers(ADMIN_URLS).hasAnyAuthority("ADMIN")
 
                         .anyRequest().authenticated()
                 )

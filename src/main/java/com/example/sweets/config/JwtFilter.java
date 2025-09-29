@@ -44,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 User user = userRepository.findByUsername(username).orElse(null);
                 if (user != null) {
-                    // Convert roles to GrantedAuthority
+
                     List<SimpleGrantedAuthority> authorities = user.getRoles()
                             .stream()
                             .map(Role::getAuthority) // get role name
