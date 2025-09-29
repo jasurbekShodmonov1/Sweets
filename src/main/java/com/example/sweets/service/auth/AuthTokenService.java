@@ -90,7 +90,7 @@ public class AuthTokenService {
     String username = jwt.getSubject();
     List<String> roles = jwt.getClaim("roles");
 
-    // Get user from cache instead of database
+
     UserDetails user = userDetailsService.loadUserByUsername(username);
     if (user == null) {
       log.error("User {} not found", username);
