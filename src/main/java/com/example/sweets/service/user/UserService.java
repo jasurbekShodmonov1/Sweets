@@ -132,7 +132,7 @@ public class UserService {
       SimpleMailMessage message = new SimpleMailMessage();
       message.setTo(email);
       message.setSubject("Verify your email");
-      message.setText("Your new OTP code is: " + otp + "\nIt expires in 5 minutes.");
+      message.setText("Your  OTP code is: " + otp + "\nIt expires in 5 minutes.");
       mailSender.send(message);
 
   }
