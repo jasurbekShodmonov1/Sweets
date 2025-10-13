@@ -1,6 +1,7 @@
 package com.example.sweets.service.auth;
 
 import com.example.sweets.dto.auth.LoginResponseDto;
+import com.example.sweets.entity.user.Role;
 import com.example.sweets.entity.user.User;
 import com.example.sweets.repository.UserRepository;
 import com.example.sweets.security.JwtUtil;
@@ -33,7 +34,7 @@ public class AuthService {
         return new LoginResponseDto(
                 token,
                 user.getUsername(),
-                user.getRoles().stream().map(r -> r.getName()).toList()
+                user.getRoles().stream().map(Role::getName).toList()
         );
     }
 }
