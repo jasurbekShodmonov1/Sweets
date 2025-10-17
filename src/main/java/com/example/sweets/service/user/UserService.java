@@ -3,6 +3,8 @@ package com.example.sweets.service.user;
 import com.example.sweets.dto.emailOtp.OtpData;
 import com.example.sweets.dto.request.user.UserRequestDto;
 import com.example.sweets.dto.response.user.UserResponseDto;
+import com.example.sweets.entity.sms.Sms;
+import com.example.sweets.entity.sms.SmsStatus;
 import com.example.sweets.entity.user.Role;
 import com.example.sweets.entity.user.User;
 import com.example.sweets.mapper.UserMapper;
@@ -15,12 +17,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.example.sweets.repository.sms.SmsRepository;
 import com.example.sweets.util.OTPGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static com.example.sweets.util.OTPGenerator.maskMessage;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +35,7 @@ public class UserService {
   private final UserMapper userMapper;
 
   private final RoleRepository roleRepository;
+  private final SmsRepository smsRepository;
   private final JavaMailSender mailSender;
   private final ProductRepository productRepository;
   private final PasswordEncoder passwordEncoder;
@@ -112,29 +118,54 @@ public class UserService {
   }
 
   public void sendOpt(String email){
+      Sms sms = new Sms();
       String otp = OTPGenerator.generateOtp();
       LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(5);
       otpStorage.put(email, new OtpData(otp, expiresAt, email));
 
-      SimpleMailMessage message = new SimpleMailMessage();
-      message.setTo(email);
-      message.setSubject("Verify your email");
-      message.setText("Your OTP code is: " + otp + "\nIt expires in 5 minutes.");
-      mailSender.send(message);
+      sms.setReceiverEmail(email);
+      sms.setMessage(maskMessage(otp));
+      sms.setDate(LocalDateTime.now());
+      sms.setStatus(SmsStatus.PENDING);
+
+      try {
+          SimpleMailMessage message = new SimpleMailMessage();
+          message.setTo(email);
+          message.setSubject("Verify your email");
+          message.setText("Your OTP code is: " + otp + "\nIt expires in 5 minutes.");
+          mailSender.send(message);
+          sms.setStatus(SmsStatus.SENT);
+      }catch (Exception e){
+          sms.setStatus(SmsStatus.FAILED);
+      }
+
+      smsRepository.save(sms);
+
   }
 
   public void resendOtp(String email){
+      Sms sms = new Sms();
       otpStorage.remove(email);
       String otp = OTPGenerator.generateOtp();
       LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(5);
       otpStorage.put(email, new OtpData(otp, expiresAt, email));
 
-      SimpleMailMessage message = new SimpleMailMessage();
-      message.setTo(email);
-      message.setSubject("Verify your email");
-      message.setText("Your     OTP code is: " + otp + "\nIt expires in 5 minutes.");
-      mailSender.send(message);
+      sms.setReceiverEmail(email);
+      sms.setMessage(maskMessage(otp));
+      sms.setDate(LocalDateTime.now());
 
+      try {
+          SimpleMailMessage message = new SimpleMailMessage();
+          message.setTo(email);
+          message.setSubject("Verify your email");
+          message.setText("Your     OTP code is: " + otp + "\nIt expires in 5 minutes.");
+          mailSender.send(message);
+          sms.setStatus(SmsStatus.SENT);
+      }catch (Exception e){
+          sms.setStatus(SmsStatus.FAILED);
+      }
+
+      smsRepository.save(sms);
   }
 
   public boolean verifyOtp(String email, String otp) {

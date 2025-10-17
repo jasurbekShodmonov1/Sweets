@@ -11,4 +11,9 @@ public class OTPGenerator {
         int number = 100000 + random.nextInt(900000);
         return String.valueOf(number);
     }
+
+    public static String maskMessage(String message){
+        if(message == null || message.isEmpty()) return " ";
+        return "*".repeat(message.length());
+    }
 }
