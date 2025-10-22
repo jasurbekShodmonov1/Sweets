@@ -16,7 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+        import java.util.List;
 
 @Slf4j
 @RestController
@@ -46,6 +46,24 @@ public class AuthController {
                 .toList();
 
         return new MeResponseDto(user.getUsername(), user.getEmail(), roles);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            Authentication authentication,
+            @RequestHeader(name = "Authorization", required = false) String authHeader ){
+
+        if(authentication == null){
+            return ResponseEntity.badRequest().body("User not authenticated");
+        }
+        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+            return ResponseEntity.badRequest().body("Missing or invalid Authorization header");
+        }
+
+        String token = authHeader.substring(7);
+        String username = authentication.getName();
+        authService.logout(token);
+        return ResponseEntity.ok("User '"+username+"' logged out successfully");
     }
 
 }

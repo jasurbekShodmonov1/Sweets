@@ -16,6 +16,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final TokenBlacklistService tokenBlacklistService;
 
     public LoginResponseDto  login(String username, String password) {
         User user = userRepository.findByUsername(username)
@@ -36,5 +37,9 @@ public class AuthService {
                 user.getUsername(),
                 user.getRoles().stream().map(Role::getName).toList()
         );
+    }
+
+    public void  logout(String token){
+        tokenBlacklistService.blackListToken(token);
     }
 }
