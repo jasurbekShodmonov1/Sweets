@@ -71,7 +71,7 @@ public class UserService {
             || !rawPassword.matches(".*[^a-zA-Z0-9].*")) {
           throw new IllegalArgumentException("Password must be at least 8 characters, contain one uppercase letter, and one special symbol");
     }
-    user.setPassword(passwordEncoder.encode(userRequestDto.password()));
+    user.setPassword(passwordEncoder.encode(rawPassword));
 
     List<Role> roles = roleRepository.findAllById(userRequestDto.roleIds());
     user.setRoles(roles);

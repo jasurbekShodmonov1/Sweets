@@ -1,7 +1,6 @@
 package com.example.sweets.security;
 
 import com.example.sweets.entity.user.Role;
-import com.example.sweets.entity.user.User;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
